@@ -1,16 +1,40 @@
 # This is a sample Python script.
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import integrate
+
+a = 1
+d = 0.1
+b = 0.1
+x0 = 4.
+y0 = 2.
+
+def derivative(X, t, a, d, b):
+    x, y = X
+    dotx = x * (1 - x) - a * x * y / (d + x)
+    doty = b * y * (1 - y / x)
+    return np.array([dotx, doty])
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharmaa!!!!!')
+    Nt = 1000
+    tmax = 30.
+    t = np.linspace(0., tmax, Nt)
+    X0 = [x0, y0]
+    res = integrate.odeint(derivative, X0, t, args=(a, d, b))
+    x, y = res.T
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    plt.figure()
+    plt.grid()
+    plt.title("odeint method")
+    plt.plot(t, x, 'xb', label='Deer')
+    plt.plot(t, y, '+r', label="Wolves")
+    plt.xlabel('Time t, [days]')
+    plt.ylabel('Population')
+    plt.legend()
+
+    plt.show()
+
+
+
